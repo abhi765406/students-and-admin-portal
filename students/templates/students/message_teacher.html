@@ -1,0 +1,47 @@
+<!-- filepath: c:\GPT\college_portal\students\templates\students\message_teacher.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Message Teacher</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="main-card col-12 col-md-8 mx-auto">
+        <h2>Ask a Doubt / Message a Teacher</h2>
+        {% if success %}
+            <div class="alert alert-success">Your message has been sent!</div>
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="teacher_id" class="form-label">Select Teacher</label>
+                <select name="teacher_id" id="teacher_id" class="form-select" required>
+                    <option value="">Choose...</option>
+                    {% for teacher in teachers %}
+                        <option value="{{ teacher.id }}">{{ teacher.user.get_full_name|default:teacher.user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="content" class="form-label">Your Message</label>
+                <textarea name="content" id="content" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="doubt_file" class="form-label">Attach File (optional)</label>
+                <input type="file" name="doubt_file" id="doubt_file" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+        <a href="{% url 'dashboard' %}" class="btn btn-link mt-3">Back to Dashboard</a>
+        <!-- Add this where you show messages with a teacher -->
+        <form method="post" action="{% url 'clear_student_chat' teacher.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-danger ms-2" onclick="return confirm('Clear all messages with this teacher?');">
+                Clear Chat
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

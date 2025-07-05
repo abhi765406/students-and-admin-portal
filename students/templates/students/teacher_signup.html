@@ -1,0 +1,21 @@
+<!-- filepath: c:\GPT\college_portal\students\templates\students\teacher_signup.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Sign Up</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="main-card col-12 col-md-6 mx-auto">
+        <h2>Teacher Sign Up</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-warning w-100 mt-3">Sign Up</button>
+        </form>
+        <a href="{% url 'teacher_login' %}" class="btn btn-link mt-3">Already have an account? Login</a>
+    </div>
+</div>
+</body>
+</html>

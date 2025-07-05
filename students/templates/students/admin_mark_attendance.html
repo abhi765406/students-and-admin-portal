@@ -1,0 +1,21 @@
+<!-- filepath: c:\GPT\college_portal\students\templates\students\admin_mark_attendance.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Mark Attendance</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Mark Attendance for Student</h2>
+    {% if message %}
+        <div class="alert alert-info">{{ message }}</div>
+    {% endif %}
+    <form method="POST" class="border p-4 rounded bg-light shadow-sm">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Mark Attendance</button>
+    </form>
+</div>
+</body>
+</html>

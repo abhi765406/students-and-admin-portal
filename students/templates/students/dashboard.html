@@ -1,0 +1,151 @@
+<!-- filepath: c:\GPT\college_portal\students\templates\students\dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Welcome, {{ user.username }}!</h2>
+    <p>This is your dashboard.</p>
+    {% if notices %}
+        <div class="mb-4">
+            <h4>Notices</h4>
+            <ul class="list-group">
+                {% for notice in notices %}
+                    <li class="list-group-item">
+                        <strong>{{ notice.title }}</strong><br>
+                        {{ notice.message }}<br>
+                        <small class="text-muted">{{ notice.created_at }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <div class="alert alert-info">No notices yet.</div>
+    {% endif %}
+    <a href="{% url 'my_profile' %}" class="btn btn-primary mt-3">Go to Profile</a>
+    <a href="{% url 'study_chatbot' %}" class="btn btn-outline-success mt-3 ms-2">Study Chatbot</a>
+    <a href="{% url 'message_teacher' %}" class="btn btn-outline-primary mt-3 ms-2">Ask Doubt / Message Teacher</a>
+</div>
+
+<!-- YouTube Study Tool (No API, Free Version, with Auto Notes & PDF Download) -->
+<div class="card mt-4 mb-4">
+    <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">Study with YouTube</h5>
+    </div>
+    <div class="card-body">
+        <form class="mb-3" onsubmit="openYTSearch(); return false;">
+            <div class="input-group">
+                <input type="text" id="ytQuery" class="form-control" placeholder="Search topic on YouTube..." required>
+                <button type="submit" class="btn btn-danger">Search</button>
+            </div>
+            <small class="text-muted">Search opens in a new tab. Copy any YouTube link below to play here.</small>
+        </form>
+        <form class="mb-3" onsubmit="playYTLink(); return false;">
+            <div class="input-group">
+                <input type="url" id="ytLink" class="form-control" placeholder="Paste YouTube video link here..." required>
+                <button type="submit" class="btn btn-outline-danger">Play</button>
+            </div>
+        </form>
+        <div id="ytPlayer" class="ratio ratio-16x9 mb-3" style="display:none;">
+            <iframe id="ytIframe" src="" allowfullscreen></iframe>
+        </div>
+        <div class="mb-2 d-flex gap-2">
+            <button class="btn btn-outline-secondary btn-sm" onclick="generateNotes()">Auto Generate Notes</button>
+            <button class="btn btn-outline-success btn-sm" onclick="downloadNotesPDF()">Download Notes as PDF</button>
+        </div>
+        <h6>Take Notes While Watching</h6>
+        <textarea id="ytNotes" class="form-control mb-2" rows="6" placeholder="Type your notes here..."></textarea>
+        <div id="notesSavedMsg" class="text-success mt-2" style="display:none;">Notes saved locally!</div>
+        <div id="notesErrorMsg" class="text-danger mt-2" style="display:none;"></div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+function openYTSearch() {
+    var query = document.getElementById('ytQuery').value;
+    window.open('https://www.youtube.com/results?search_query=' + encodeURIComponent(query), '_blank');
+}
+function playYTLink() {
+    var url = document.getElementById('ytLink').value;
+    var match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([\w-]{11})/);
+    if (match) {
+        var vid = match[1];
+        var player = document.getElementById('ytPlayer');
+        var iframe = document.getElementById('ytIframe');
+        iframe.src = "https://www.youtube.com/embed/" + vid;
+        player.style.display = 'block';
+        localStorage.setItem('lastYTVideo', vid);
+    } else {
+        alert("Please enter a valid YouTube video link.");
+    }
+}
+function saveNotes() {
+    var notes = document.getElementById('ytNotes').value;
+    localStorage.setItem('ytNotes', notes);
+    document.getElementById('notesSavedMsg').style.display = 'block';
+    setTimeout(() => { document.getElementById('notesSavedMsg').style.display = 'none'; }, 2000);
+}
+window.onload = function() {
+    var saved = localStorage.getItem('ytNotes');
+    if (saved) document.getElementById('ytNotes').value = saved;
+    var lastVid = localStorage.getItem('lastYTVideo');
+    if (lastVid) {
+        document.getElementById('ytIframe').src = "https://www.youtube.com/embed/" + lastVid;
+        document.getElementById('ytPlayer').style.display = 'block';
+    }
+}
+
+// 100% Free: Get YouTube transcript using public endpoint (no API, works for videos with captions)
+function generateNotes() {
+    document.getElementById('notesErrorMsg').style.display = 'none';
+    var url = document.getElementById('ytLink').value;
+    var match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([\w-]{11})/);
+    if (!match) {
+        document.getElementById('notesErrorMsg').innerText = "Please enter a valid YouTube video link above first.";
+        document.getElementById('notesErrorMsg').style.display = 'block';
+        return;
+    }
+    var vid = match[1];
+    // Use a free public transcript API (like https://yt.lemnoslife.com/)
+    fetch('https://yt.lemnoslife.com/noKey/videos?part=transcript&id=' + vid)
+        .then(r => r.json())
+        .then(data => {
+            if (data.items && data.items[0] && data.items[0].transcript && data.items[0].transcript.length > 0) {
+                // Join transcript text
+                var transcript = data.items[0].transcript.map(t => t.text).join(' ');
+                // Simple summary: take first 10 lines or 1000 chars
+                var summary = transcript.split('. ').slice(0, 10).join('. ') + '.';
+                document.getElementById('ytNotes').value = summary;
+                saveNotes();
+            } else {
+                document.getElementById('notesErrorMsg').innerText = "Transcript not available for this video.";
+                document.getElementById('notesErrorMsg').style.display = 'block';
+            }
+        })
+        .catch(() => {
+            document.getElementById('notesErrorMsg').innerText = "Could not fetch transcript. Try another video.";
+            document.getElementById('notesErrorMsg').style.display = 'block';
+        });
+}
+
+// 100% Free: Download notes as PDF using jsPDF
+function downloadNotesPDF() {
+    var notes = document.getElementById('ytNotes').value;
+    if (!notes.trim()) {
+        alert("No notes to download!");
+        return;
+    }
+    var doc = new window.jspdf.jsPDF();
+    doc.setFontSize(14);
+    doc.text("YouTube Study Notes", 10, 10);
+    doc.setFontSize(12);
+    var lines = doc.splitTextToSize(notes, 180);
+    doc.text(lines, 10, 20);
+    doc.save("YouTube_Study_Notes.pdf");
+}
+</script>
+</body>
+</html>

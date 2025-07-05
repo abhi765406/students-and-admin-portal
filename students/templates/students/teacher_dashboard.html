@@ -1,0 +1,177 @@
+<!-- filepath: c:\GPT\college_portal\students\templates\students\teacher_dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .main-card {
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            background: rgba(255,255,255,0.97);
+            padding: 2.5rem 2rem;
+            margin-top: 3rem;
+        }
+        .btn-lg, .btn {
+            border-radius: 2rem;
+            font-weight: 500;
+        }
+        h2, h4 {
+            color: #2a5298;
+            font-weight: bold;
+        }
+        @media (max-width: 576px) {
+            .main-card { padding: 1.2rem 0.5rem; }
+            h2 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="main-card col-12 col-md-10 mx-auto">
+        <h2>Welcome, {{ user.username }}!</h2>
+        <h4 class="mt-4">Upload Study Material</h4>
+        <form method="post" enctype="multipart/form-data" class="mb-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <input type="text" name="title" class="form-control" placeholder="Title" required>
+            </div>
+            <div class="mb-3">
+                <select name="semester" class="form-select" required>
+                    <option value="">Select Semester</option>
+                    {% for id, name in semesters %}
+                        <option value="{{ id }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <input type="file" name="file" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-success">Upload</button>
+        </form>
+        <h4>Your Uploaded Materials</h4>
+        <ul class="list-group mb-4">
+            {% for material in materials %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ material.title }} ({{ material.semester.name }})
+                    <a href="{{ material.file.url }}" class="btn btn-sm btn-primary" target="_blank">Download</a>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No materials uploaded yet.</li>
+            {% endfor %}
+        </ul>
+        <h4 class="mt-4">Connect with Students</h4>
+        <div class="d-flex flex-wrap gap-3 justify-content-center mb-3">
+            <a href="https://meet.google.com/" target="_blank" class="btn btn-danger btn-lg">
+                <i class="bi bi-camera-video"></i> Start Google Meet
+            </a>
+            <a href="https://zoom.us/start/videomeeting" target="_blank" class="btn btn-primary btn-lg">
+                <i class="bi bi-camera-video"></i> Start Zoom Meeting
+            </a>
+            <a href="https://whereby.com/" target="_blank" class="btn btn-success btn-lg">
+                <i class="bi bi-camera-video"></i> Start Whereby Room
+            </a>
+        </div>
+        <form class="mb-3" id="inviteForm" onsubmit="return sendInvite();">
+            <div class="input-group">
+                <input type="url" id="meetingLink" class="form-control" placeholder="Paste your meeting/class/chat link here" required>
+                <button type="submit" class="btn btn-outline-secondary">Generate Invite</button>
+            </div>
+        </form>
+        <div id="inviteLinks" style="display:none;">
+            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                <a id="whatsappInvite" class="btn btn-success" target="_blank">
+                    <i class="bi bi-whatsapp"></i> Send via WhatsApp
+                </a>
+                <a id="emailInvite" class="btn btn-info" target="_blank">
+                    <i class="bi bi-envelope"></i> Send via Email
+                </a>
+                <a id="copyInvite" class="btn btn-secondary" onclick="copyInviteLink()" style="cursor:pointer;">
+                    <i class="bi bi-clipboard"></i> Copy Invite Link
+                </a>
+            </div>
+            <p class="mt-2 text-muted" id="inviteMsg"></p>
+        </div>
+        <p class="mt-3 text-muted">Share the meeting link with your students for live classes or chat.</p>
+        <h4 class="mt-4">Student Messages / Doubts</h4>
+        <ul class="list-group mb-4">
+            {% for msg in messages %}
+                <li class="list-group-item">
+                    <strong>{{ msg.sender.get_full_name|default:msg.sender.username }}</strong>
+                    {% with student=msg.sender.student %}
+                        (Roll: {{ student.roll_no }})
+                    {% endwith %}
+                    <br>
+                    <span class="text-muted small">{{ msg.sent_at|date:"d M Y H:i" }}</span>
+                    <div class="mt-2">{{ msg.content }}</div>
+                    {% if msg.doubt_file %}
+                        <div class="mt-2">
+                            <a href="{{ msg.doubt_file.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                Download Student File
+                            </a>
+                        </div>
+                    {% endif %}
+                    {% if msg.reply %}
+                        <div class="alert alert-success mt-2 mb-0">
+                            <strong>Your Reply:</strong> {{ msg.reply }}
+                            <br>
+                            <span class="text-muted small">{{ msg.replied_at|date:"d M Y H:i" }}</span>
+                            {% if msg.reply_file %}
+                                <div class="mt-2">
+                                    <a href="{{ msg.reply_file.url }}" target="_blank" class="btn btn-sm btn-outline-success">
+                                        Download Your Reply File
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <form method="post" enctype="multipart/form-data" class="mt-2">
+                            {% csrf_token %}
+                            <input type="hidden" name="reply_message_id" value="{{ msg.id }}">
+                            <div class="input-group mb-2">
+                                <input type="text" name="reply_text" class="form-control" placeholder="Type your reply..." required>
+                                <input type="file" name="reply_file" class="form-control">
+                                <button type="submit" class="btn btn-primary">Reply</button>
+                            </div>
+                        </form>
+                    {% endif %}
+                    <!-- Clear Chat Button for Teacher -->
+                    <form method="post" action="{% url 'clear_teacher_chat' msg.sender.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger ms-2" onclick="return confirm('Clear all messages with this student?');">
+                            Clear Chat
+                        </button>
+                    </form>
+                </li>
+            {% empty %}
+                <li class="list-group-item">No messages yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<script>
+function sendInvite() {
+    var link = document.getElementById('meetingLink').value;
+    var text = encodeURIComponent("Join my class/meeting: " + link);
+    document.getElementById('whatsappInvite').href = "https://wa.me/?text=" + text;
+    document.getElementById('emailInvite').href = "mailto:?subject=Class/Meeting Invite&body=" + text;
+    document.getElementById('copyInvite').setAttribute('data-link', link);
+    document.getElementById('inviteLinks').style.display = 'block';
+    document.getElementById('inviteMsg').innerText = "Now you can send your invite link via WhatsApp, Email, or copy it to share anywhere.";
+    return false;
+}
+function copyInviteLink() {
+    var link = document.getElementById('copyInvite').getAttribute('data-link');
+    navigator.clipboard.writeText(link);
+    document.getElementById('inviteMsg').innerText = "Link copied to clipboard!";
+}
+</script>
+</body>
+</html>

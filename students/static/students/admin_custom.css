@@ -1,0 +1,36 @@
+body, .dashboard #content {
+    background: linear-gradient(135deg, #c9d6ff 0%, #e2e2e2 100%) !important;
+}
+#header {
+    background: linear-gradient(90deg, #2a5298 0%, #1e3c72 100%) !important;
+    color: #fff !important;
+}
+#header a, #header a:visited {
+    color: #fff !important;
+}
+.module caption, .module h2, .module caption a {
+    color: #2a5298 !important;
+    font-weight: bold;
+}
+#user-tools {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+    color: #2a5298;
+}
+#content-main .module {
+    border-radius: 1.2rem;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
+    background: rgba(255,255,255,0.97);
+    margin-bottom: 2rem;
+}
+.button, input[type=submit], input[type=button], .submit-row input {
+    background: linear-gradient(90deg, #2a5298 0%, #1e3c72 100%) !important;
+    color: #fff !important;
+    border-radius: 2rem !important;
+    font-weight: 500;
+    border: none;
+}
+a:link, a:visited {
+    color: #2a5298 !important;
+}

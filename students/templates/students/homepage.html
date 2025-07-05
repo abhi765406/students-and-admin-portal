@@ -1,0 +1,416 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Welcome to Student Management</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            min-height: 100vh;
+            background:
+                linear-gradient(135deg, rgba(224,234,252,0.7) 0%, rgba(207,222,243,0.7) 100%),
+                url("{% static 'students/pexels-stywo-1054218.jpg' %}") no-repeat center center fixed;
+            background-size: cover;
+            overflow-x: hidden;
+        }
+        .main-card {
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            background: rgba(255,255,255,0.97);
+            padding: 2.5rem 2rem;
+            animation: fadeInUp 1.2s cubic-bezier(.23,1.01,.32,1) both;
+        }
+        .project-title {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 2.7rem;
+            font-weight: bold;
+            color: #2a5298;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            animation: fadeInDown 1s both;
+        }
+        .subtitle {
+            color: #555;
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+            animation: fadeInDown 1.2s 0.2s both;
+        }
+        .btn-lg {
+            min-width: 200px;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: fadeIn 1.2s both;
+        }
+        .btn-lg:hover, .btn-lg:focus {
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 8px 24px 0 rgba(31, 38, 135, 0.15);
+        }
+        .icon {
+            margin-right: 8px;
+            font-size: 1.2em;
+            vertical-align: middle;
+        }
+        .card {
+            animation: fadeIn 1.5s 0.5s both;
+        }
+        /* Floating animated shapes */
+        .floating-shape {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.18;
+            pointer-events: none;
+            animation: floatY 6s ease-in-out infinite alternate;
+        }
+        .floating-shape.shape1 { top: 10%; left: 5%; width: 80px; animation-delay: 0s;}
+        .floating-shape.shape2 { top: 60%; left: 85%; width: 60px; animation-delay: 1.2s;}
+        .floating-shape.shape3 { top: 80%; left: 15%; width: 50px; animation-delay: 2.2s;}
+        .floating-shape.shape4 { top: 30%; left: 70%; width: 70px; animation-delay: 0.7s;}
+        .floating-shape.shape5 { top: 50%; left: 40%; width: 100px; animation-delay: 1.7s;}
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-40px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes fadeIn {
+            from { opacity: 0;}
+            to { opacity: 1;}
+        }
+        @keyframes floatY {
+            from { transform: translateY(0);}
+            to { transform: translateY(-30px);}
+        }
+        @media (max-width: 576px) {
+            .main-card { padding: 1.2rem 0.5rem; }
+            .project-title { font-size: 2rem; }
+            .floating-shape { display: none; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body>
+<!-- Floating SVG shapes for animation -->
+<svg class="floating-shape shape1" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#2a5298"/></svg>
+<svg class="floating-shape shape2" viewBox="0 0 100 100"><rect width="100" height="100" rx="30" fill="#ffb347"/></svg>
+<svg class="floating-shape shape3" viewBox="0 0 100 100"><polygon points="50,0 100,100 0,100" fill="#6dd5ed"/></svg>
+<svg class="floating-shape shape4" viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="50" ry="30" fill="#cfdef3"/></svg>
+<svg class="floating-shape shape5" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#ff6f91"/></svg>
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; position:relative; z-index:1;">
+    <div class="main-card col-12 col-md-10 col-lg-8">
+        <div class="text-center mb-4">
+            <span class="project-title">Welcome to Student Management</span>
+            <div class="subtitle">A complete portal for students and admins</div>
+        </div>
+        <div class="row g-3 justify-content-center">
+            <div class="col-12 col-md-6 d-grid">
+                <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-person-plus icon"></i>Sign Up
+                </a>
+            </div>
+            <div class="col-12 col-md-6 d-grid">
+                <a href="{% url 'login' %}" class="btn btn-success btn-lg">
+                    <i class="bi bi-box-arrow-in-right icon"></i>Login
+                </a>
+            </div>
+            <div class="col-12 col-md-6 d-grid">
+                <a href="{% url 'register_student' %}" class="btn btn-info btn-lg">
+                    <i class="bi bi-pencil-square icon"></i>Register as Student
+                </a>
+            </div>
+            <div class="col-12 col-md-6 d-grid">
+                <a href="/admin/" class="btn btn-dark btn-lg">
+                    <i class="bi bi-shield-lock icon"></i>Login as Admin
+                </a>
+            </div>
+            <div class="col-12 col-md-6 d-grid">
+                <a href="{% url 'my_profile' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-person-circle icon"></i>My Profile
+                </a>
+            </div>
+            <div class="col-12 col-md-6 d-grid">
+                <a href="{% url 'attendance_chart' %}" class="btn btn-outline-success btn-lg">
+                    <i class="bi bi-bar-chart icon"></i>Attendance Chart
+                </a>
+            </div>
+            <div class="col-12 col-md-6 d-grid">
+                <a href="{% url 'attendance_table' %}" class="btn btn-outline-info btn-lg">
+                    <i class="bi bi-table icon"></i>Attendance Table
+                </a>
+            </div>
+            <div class="col-12 col-md-6 d-grid">
+                <a href="{% url 'logout' %}" class="btn btn-danger btn-lg">
+                    <i class="bi bi-box-arrow-right icon"></i>Logout
+                </a>
+            </div>
+            <div class="col-12 col-md-6 d-grid">
+                <a href="{% url 'admin_attendance_table' %}" class="btn btn-outline-dark btn-lg">
+                    <i class="bi bi-clipboard-data icon"></i>Admin Attendance Table
+                </a>
+            </div>
+            <div class="col-12 col-md-6 d-grid">
+                <a href="{% url 'teacher_signup' %}" class="btn btn-warning btn-lg">
+                    <i class="bi bi-person-plus icon"></i>Teacher Sign Up
+                </a>
+            </div>
+            <div class="col-12 col-md-6 d-grid">
+                <a href="{% url 'teacher_login' %}" class="btn btn-info btn-lg">
+                    <i class="bi bi-box-arrow-in-right icon"></i>Teacher Login
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4 mb-4">
+    <div class="card-header bg-info text-white">
+        <h5 class="mb-0">Free Study & Productivity Tools</h5>
+    </div>
+    <div class="card-body d-flex flex-wrap gap-3 justify-content-center">
+        <a href="https://pomofocus.io/" target="_blank" class="btn btn-outline-danger">
+            Pomodoro Timer (Focus Timer)
+        </a>
+        <a href="https://todo.microsoft.com/" target="_blank" class="btn btn-outline-primary">
+            To-Do List / Task Manager
+        </a>
+        <a href="https://calendar.google.com/" target="_blank" class="btn btn-outline-success">
+            Online Calendar & Reminders
+        </a>
+        <a href="https://www.cram.com/flashcards/create" target="_blank" class="btn btn-outline-warning">
+            Flashcards Generator
+        </a>
+        <a href="https://www.mindmup.com/" target="_blank" class="btn btn-outline-info">
+            Mind Map Creator (MindMup)
+        </a>
+        <a href="https://coggle.it/" target="_blank" class="btn btn-outline-secondary">
+            Mind Map Creator (Coggle)
+        </a>
+    </div>
+    <div class="mt-2 text-muted small">
+        All tools are 100% free and open in a new tab. No login or payment required for basic use.
+    </div>
+</div>
+
+<!-- Free Document & Office Tools -->
+<div class="card mt-4 mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Free Document & Office Tools</h5>
+    </div>
+    <div class="card-body d-flex flex-wrap gap-3 justify-content-center">
+        <a href="https://www.passport-photo.online/" target="_blank" class="btn btn-outline-primary">
+            Create Passport Size Photo
+        </a>
+        <a href="https://www.ilovepdf.com/compress_pdf" target="_blank" class="btn btn-outline-danger">
+            Compress PDF
+        </a>
+        <a href="https://www.ilovepdf.com/pdf_to_jpg" target="_blank" class="btn btn-outline-success">
+            PDF to JPEG
+        </a>
+        <a href="https://www.ilovepdf.com/jpg_to_pdf" target="_blank" class="btn btn-outline-warning">
+            JPG to PDF
+        </a>
+        <a href="https://www.ilovepdf.com/scan-pdf" target="_blank" class="btn btn-outline-info">
+            Scan Documents (Auto Scan)
+        </a>
+        <a href="https://www.ilovepdf.com/" target="_blank" class="btn btn-outline-secondary">
+            All Office Tools (Merge, Split, Convert, Sign, etc.)
+        </a>
+        <a href="https://www.pdfescape.com/open/" target="_blank" class="btn btn-outline-dark">
+            Edit PDF Online (Add Text, Images, etc.)
+        </a>
+    </div>
+    <div class="mt-2 text-muted small">
+        All tools are 100% free and open in a new tab. No login or payment required.
+    </div>
+</div>
+
+<!-- Add a button to open the Resume Builder modal -->
+<div class="d-flex justify-content-center mb-4">
+    <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#resumeBuilderModal">
+        <i class="bi bi-file-earmark-person"></i> Free AI Resume Builder
+    </button>
+</div>
+
+<!-- Resume Builder Modal (hidden until button is clicked) -->
+<div class="modal fade" id="resumeBuilderModal" tabindex="-1" aria-labelledby="resumeBuilderModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="resumeBuilderModalLabel">Free AI Resume Builder</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="resumeForm" class="mb-3">
+            <div class="row g-2">
+                <div class="col-md-6">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="resName" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="resEmail" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    <input type="text" class="form-control" id="resPhone" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">LinkedIn (optional)</label>
+                    <input type="text" class="form-control" id="resLinkedin">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Summary <span class="text-primary" style="cursor:pointer;" onclick="suggestSummary()">[AI Suggest]</span></label>
+                    <textarea class="form-control" id="resSummary" rows="2" placeholder="e.g. Enthusiastic Computer Science student..."></textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Education <span class="text-primary" style="cursor:pointer;" onclick="suggestEducation()">[AI Suggest]</span></label>
+                    <textarea class="form-control" id="resEducation" rows="2" placeholder="e.g. B.Tech in Computer Science, XYZ University, 2021-2025"></textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Experience <span class="text-primary" style="cursor:pointer;" onclick="suggestExperience()">[AI Suggest]</span></label>
+                    <textarea class="form-control" id="resExperience" rows="2" placeholder="e.g. Intern at ABC Corp, June-Aug 2024..."></textarea>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Skills <span class="text-primary" style="cursor:pointer;" onclick="suggestSkills()">[AI Suggest]</span></label>
+                    <textarea class="form-control" id="resSkills" rows="2" placeholder="e.g. Python, Java, Teamwork, Leadership"></textarea>
+                </div>
+            </div>
+            <button type="button" class="btn btn-success mt-3" onclick="generateResume()">Preview Resume</button>
+            <button type="button" class="btn btn-outline-primary mt-3 ms-2" onclick="downloadResumePDF()">Download as PDF</button>
+        </form>
+        <div id="resumePreview" class="border rounded p-3" style="background:#f8f9fa; display:none;"></div>
+        <div class="mt-2 text-muted small">
+            100% free. No login or payment required. Your data stays in your browser.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-4 mb-4">
+    <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0">Mini Games Zone (Beat Boredom!)</h5>
+    </div>
+    <div class="card-body d-flex flex-wrap gap-3 justify-content-center">
+        <a href="https://playsnake.org/" target="_blank" class="btn btn-outline-success">
+            Play Snake Game
+        </a>
+        <a href="https://www.crazygames.com/game/eg-racing" target="_blank" class="btn btn-outline-primary">
+            Play Car Racing
+        </a>
+        <a href="https://www.mathsisfun.com/games/puzzle-games.html" target="_blank" class="btn btn-outline-info">
+            Puzzles & Brain Teasers
+        </a>
+        <a href="https://www.tetris.com/play-tetris" target="_blank" class="btn btn-outline-danger">
+            Play Tetris
+        </a>
+        <a href="https://2048game.com/" target="_blank" class="btn btn-outline-secondary">
+            Play 2048
+        </a>
+        <a href="https://www.google.com/fbx?fbx=snake_arcade" target="_blank" class="btn btn-outline-success">
+            Google Snake Arcade
+        </a>
+        <a href="https://www.google.com/fbx?fbx=pakman_arcade" target="_blank" class="btn btn-outline-warning">
+            Google Pac-Man
+        </a>
+        <a href="https://www.chess.com/play/computer" target="_blank" class="btn btn-outline-dark">
+            Play Chess vs Computer
+        </a>
+        <a href="https://minesweeperonline.com/" target="_blank" class="btn btn-outline-primary">
+            Play Minesweeper
+        </a>
+    </div>
+    <div class="mt-2 text-muted small">
+        All games are 100% free and open in a new tab. No login or payment required.
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function suggestSummary() {
+    document.getElementById('resSummary').value =
+        "Motivated and detail-oriented student with a passion for technology and problem-solving. Eager to apply academic knowledge in real-world settings and contribute to team success.";
+}
+function suggestEducation() {
+    document.getElementById('resEducation').value =
+        "B.Tech in Computer Science, XYZ University, 2021-2025\nRelevant Coursework: Data Structures, Algorithms, Web Development";
+}
+function suggestExperience() {
+    document.getElementById('resExperience').value =
+        "Intern, ABC Corp, June-Aug 2024\n- Developed a web application using Django and React.\n- Collaborated with a team of 5 to deliver project milestones on time.";
+}
+function suggestSkills() {
+    document.getElementById('resSkills').value =
+        "Python, Java, HTML, CSS, Communication, Teamwork, Problem Solving";
+}
+function generateResume() {
+    var name = document.getElementById('resName').value;
+    var email = document.getElementById('resEmail').value;
+    var phone = document.getElementById('resPhone').value;
+    var linkedin = document.getElementById('resLinkedin').value;
+    var summary = document.getElementById('resSummary').value;
+    var education = document.getElementById('resEducation').value;
+    var experience = document.getElementById('resExperience').value;
+    var skills = document.getElementById('resSkills').value;
+    var html = `
+        <h3 style="color:#2a5298;">${name}</h3>
+        <div><strong>Email:</strong> ${email} | <strong>Phone:</strong> ${phone} ${linkedin ? '| <strong>LinkedIn:</strong> ' + linkedin : ''}</div>
+        <hr>
+        <div><strong>Summary:</strong><br>${summary.replace(/\n/g,'<br>')}</div>
+        <div class="mt-2"><strong>Education:</strong><br>${education.replace(/\n/g,'<br>')}</div>
+        <div class="mt-2"><strong>Experience:</strong><br>${experience.replace(/\n/g,'<br>')}</div>
+        <div class="mt-2"><strong>Skills:</strong><br>${skills.replace(/\n/g,'<br>')}</div>
+    `;
+    var preview = document.getElementById('resumePreview');
+    preview.innerHTML = html;
+    preview.style.display = 'block';
+}
+function downloadResumePDF() {
+    var name = document.getElementById('resName').value || "Resume";
+    var preview = document.getElementById('resumePreview');
+    if (!preview.innerHTML.trim()) {
+        generateResume();
+    }
+    var doc = new window.jspdf.jsPDF();
+    doc.setFontSize(18);
+    doc.text(document.getElementById('resName').value, 10, 15);
+    doc.setFontSize(12);
+    var y = 25;
+    doc.text("Email: " + document.getElementById('resEmail').value, 10, y);
+    doc.text("Phone: " + document.getElementById('resPhone').value, 80, y);
+    var linkedin = document.getElementById('resLinkedin').value;
+    if (linkedin) doc.text("LinkedIn: " + linkedin, 10, y+10);
+    y += linkedin ? 20 : 10;
+    doc.setFont(undefined, 'bold');
+    doc.text("Summary:", 10, y);
+    doc.setFont(undefined, 'normal');
+    doc.text(document.getElementById('resSummary').value, 10, y+7);
+    y += 20;
+    doc.setFont(undefined, 'bold');
+    doc.text("Education:", 10, y);
+    doc.setFont(undefined, 'normal');
+    doc.text(document.getElementById('resEducation').value, 10, y+7);
+    y += 20;
+    doc.setFont(undefined, 'bold');
+    doc.text("Experience:", 10, y);
+    doc.setFont(undefined, 'normal');
+    doc.text(document.getElementById('resExperience').value, 10, y+7);
+    y += 20;
+    doc.setFont(undefined, 'bold');
+    doc.text("Skills:", 10, y);
+    doc.setFont(undefined, 'normal');
+    doc.text(document.getElementById('resSkills').value, 10, y+7);
+    doc.save(name.replace(/\s+/g,'_') + "_Resume.pdf");
+}
+</script>
+</body>
+</html>

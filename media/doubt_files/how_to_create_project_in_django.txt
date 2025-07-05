@@ -1,0 +1,48 @@
+step1: create folder
+step2:open in terminal
+step3:install virtual environment
+python -m venv venv
+venv\Scripts\activate
+
+pip install Django
+
+django-admin startproject myproject
+
+cd myproject
+
+python manage.py runserver
+
+python manage.py startapp project
+
+To start your Django project every time you open VS Code, follow these steps in your terminal:
+
+Activate your virtual environment (if you have one):
+
+.\venv\Scripts\activate
+
+
+To start your Django project every time you open VS Code, follow these steps in your terminal:
+
+1. **Activate your virtual environment (if you have one):**
+   ```powershell
+   .\venv\Scripts\activate
+   ```
+   *(Make sure you are in your project folder where venv exists.)*
+
+2. **Run the Django development server:**
+   ```powershell
+   python manage.py runserver
+   ```
+
+---
+
+**Summary of commands to run every time:**
+```powershell
+cd path\to\your\project
+.\venv\Scripts\activate
+python manage.py runserver
+```
+
+Replace `path\to\your\project` with your actual project folder path (e.g., `cd c:\GPT\college_portal`).
+
+Now you can access your site at [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser!
